@@ -1,95 +1,169 @@
-# LAPTRINHWEB-FINAL
-LAPTRINHWEB-FINAL
-# 🌐 E-Commerce & Corporate Information System (ASP.NET MVC)
+# Website Thông tin điện tử — Công ty CP Công nghệ TOANTECH
 
-> **Bài tập lớn môn:** Lập trình Web  
-> **Đề tài 10:** Xây dựng website Thông tin điện tử và Bán hàng trực tuyến cho Công ty  
-> **Công nghệ sử dụng:** ASP.NET MVC 5, MS SQL Server, Entity Framework, Bootstrap 5, jQuery  
+Bài tập lớn môn **Lập trình web** — Đề 10: *Xây dựng website Thông tin điện tử cho 1 công ty*
+Khoa Công nghệ Thông tin — Trường Đại học Mở Hà Nội
 
----
-
-## 📌 1. Giới thiệu Dự án
-
-Hệ thống được thiết kế và phát triển nhằm đáp ứng nhu cầu giới thiệu thông tin doanh nghiệp, các dòng sản phẩm/dịch vụ, hỗ trợ khách hàng đặt hàng trực tuyến và đăng tải tin tức sự kiện. Website hỗ trợ giao diện **Responsive** hoàn toàn tương thích trên Desktop, Tablet và Mobile, đồng thời đảm bảo các tiêu chuẩn về bảo mật ứng dụng web.
-
-### 📷 Giao diện minh họa hệ thống
-
-#### Giao diện Client (Hiển thị Responsive đa thiết bị)
-![Hiển thị Responsive trên Desktop, Tablet và Mobile](https://raw.githubusercontent.com/username/repository/main/docs/images/responsive-preview.png)
-
-#### Giao diện Bố cục Trang chủ & Sản phẩm
-![Bố cục trang thông tin điện tử công ty](https://raw.githubusercontent.com/username/repository/main/docs/images/layout-preview.png)
+| | |
+|---|---|
+| **Sinh viên** | Lưu Đức Toàn — 25C1001M4097 |
+| **Công nghệ** | ASP.NET Core MVC 8.0 (C#) |
+| **CSDL** | Microsoft SQL Server (Entity Framework Core 8) |
+| **Giao diện** | Bootstrap 5.3 + Bootstrap Icons, chuẩn Responsive |
 
 ---
 
-## 🔥 2. Các Tính Năng Chính
+## 1. Yêu cầu môi trường
 
-### 🛍️ Phía Khách hàng (Client-side)
-- **Trang chủ & Giới thiệu:** Cung cấp thông tin tổng quan, năng lực và các lĩnh vực hoạt động của công ty.
-- **Danh mục Sản phẩm/Dịch vụ:** Phân loại sản phẩm theo chủng loại, hỗ trợ lọc và tìm kiếm theo từ khóa.
-- **Giỏ hàng & Đặt hàng:** 
-  - Thêm, bớt, cập nhật số lượng sản phẩm linh hoạt (sử dụng AJAX).
-  - Tiếp nhận đơn hàng trực tuyến và lưu thông tin người nhận.
-- **Tin tức & Sự kiện:** Đăng tải thông tin hoạt động, bài viết chia sẻ liên quan đến doanh nghiệp.
+| Phần mềm | Phiên bản tối thiểu | Ghi chú |
+|---|---|---|
+| .NET SDK | 8.0 | https://dotnet.microsoft.com/download/dotnet/8.0 |
+| SQL Server | 2016 trở lên (Express là đủ) | Bật xác thực Windows |
+| Trình duyệt | Chrome / Edge / Firefox bản mới | |
 
-### 🛡️ Phía Quản trị viên (Admin Dashboard)
-- **Quản lý Sản phẩm:** Thêm mới, sửa, xóa (CRUD) và quản lý trạng thái hiển thị của sản phẩm/danh mục.
-- **Quản lý Đơn hàng:** Tiếp nhận, xem chi tiết giỏ hàng của khách và cập nhật trạng thái xử lý đơn hàng (*Chờ xử lý, Đã duyệt, Đang giao...*).
-- **Quản lý Tin tức:** Viết và xuất bản tin tức mới cho công ty.
-- **Phân quyền người dùng:** Cơ chế **Role-based Authorization** phân tách rõ quyền truy cập giữa `Admin` và `Customer`.
+Không bắt buộc cài Visual Studio. Có thể chạy hoàn toàn bằng dòng lệnh hoặc VS Code.
 
 ---
 
-## 🔒 3. Giải Pháp Bảo Mật Triển Khai
+## 2. Cách chạy
 
-- **Mã hóa Mật khẩu:** Sử dụng thuật toán Hash **BCrypt / SHA256** để lưu trữ mật khẩu an toàn.
-- **Chống SQL Injection:** Sử dụng **Entity Framework ORM** và Parameterized Queries.
-- **Chống XSS (Cross-Site Scripting):** Tự động mã hóa HTML (Razor Encoding) và Sanitizer dữ liệu đầu vào.
-- **Chống CSRF:** Sử dụng `Anti-Forgery Token` (`@Html.AntiForgeryToken()`) cho tất cả các form thao tác.
+### Cách 1 — Để chương trình tự tạo CSDL (khuyến nghị)
+
+```bash
+cd ToanTechWeb
+dotnet restore
+dotnet run
+```
+
+Lần chạy đầu tiên, chương trình tự động:
+1. Tạo CSDL `ToanTechDB` và toàn bộ bảng (EF Core Migrations).
+2. Nạp dữ liệu mẫu: 4 lĩnh vực, 21 danh mục, 26 sản phẩm, 6 bài viết, 18 đơn hàng, 3 tài khoản.
+
+Mở trình duyệt tại **http://localhost:5217** (hoặc https://localhost:7217).
+
+### Cách 2 — Nạp CSDL từ script SQL
+
+Dùng khi cần dựng CSDL trên máy khác mà không chạy ứng dụng trước.
+
+```bash
+sqlcmd -S .\SQLEXPRESS -E -Q "CREATE DATABASE ToanTechDB"
+sqlcmd -S .\SQLEXPRESS -d ToanTechDB -E -I -f 65001 -i Database\01_TaoBang.sql
+sqlcmd -S .\SQLEXPRESS -d ToanTechDB -E -I -f 65001 -i Database\02_DuLieuMau.sql
+```
+
+> Tham số `-f 65001` bắt buộc để sqlcmd đọc đúng tiếng Việt có dấu (UTF-8).
+> Hoặc mở 2 tệp bằng SQL Server Management Studio và bấm Execute lần lượt.
+
+### Đổi chuỗi kết nối
+
+Sửa `ToanTechWeb/appsettings.json` nếu tên máy chủ SQL khác:
+
+```json
+"DefaultConnection": "Server=.\\SQLEXPRESS;Database=ToanTechDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+```
 
 ---
 
-## 📁 4. Cấu Trúc Thư Mục Dự Án (Solution Structure)
+## 3. Tài khoản dùng thử
 
-```text
-WebCompany Solution/
-├── App_Data/                # Chứa file cơ sở dữ liệu MS SQL Server (.mdf) & Script SQL
-├── Controllers/             # Logic xử lý Server-side (Admin, Cart, Product, Home...)
-├── Models/                  # Entity Framework DbContext và Data Models
-├── ViewModels/              # Các ViewModel phục vụ truyền dữ liệu Form (Checkout, Login)
-├── Views/                   # Razor Views (Client & Admin Layout)
-├── Content/                 # CSS, Fonts, Bootstrap 5
-├── Scripts/                 # JavaScript, jQuery, AJAX handlers
-└── Web.config               # Cấu hình chuỗi kết nối Database và bảo mật
+| Vai trò | Email | Mật khẩu | Phạm vi quyền |
+|---|---|---|---|
+| Quản trị viên | `admin@toantech.vn` | `Admin@123` | Toàn quyền, kể cả quản lý tài khoản và xoá dữ liệu |
+| Nhân viên | `nhanvien@toantech.vn` | `Staff@123` | Quản lý sản phẩm, đơn hàng, tin tức — **không** xoá được dữ liệu, **không** vào được mục Tài khoản |
+| Khách hàng | `khachhang@gmail.com` | `Khach@123` | Mua hàng, xem đơn hàng của mình |
 
+Trang quản trị: **/Admin/Dashboard** (tự động chuyển tới sau khi Quản trị viên / Nhân viên đăng nhập).
 
-Các bước cài đặt:
-Clone Repository về máy:
+---
 
-Bash
-git clone [https://github.com/username/repository.git](https://github.com/username/repository.git)
-cd repository
-Khởi tạo Cơ sở Dữ liệu (MS SQL Server):
+## 4. Cấu trúc thư mục
 
-Mở phần mềm SQL Server Management Studio (SSMS).
+```
+BTL_LTW/
+├── ToanTechWeb/                     Mã nguồn ứng dụng
+│   ├── Program.cs                   Cấu hình dịch vụ, bảo mật, định tuyến
+│   ├── appsettings.json             Chuỗi kết nối, thông tin công ty
+│   ├── Models/
+│   │   ├── Entities/                Thực thể ánh xạ xuống CSDL
+│   │   └── ViewModels/              Mô hình truyền dữ liệu ra View
+│   ├── Data/
+│   │   ├── ApplicationDbContext.cs  Ngữ cảnh EF Core, cấu hình quan hệ
+│   │   ├── DbSeeder.cs              Nạp dữ liệu mẫu
+│   │   └── Migrations/              Lịch sử thay đổi cấu trúc CSDL
+│   ├── Services/                    Giỏ hàng, tải ảnh, làm sạch HTML, sinh slug
+│   ├── Middleware/                  Gắn HTTP security header
+│   ├── Controllers/                 Xử lý phía người dùng cuối
+│   ├── Areas/Admin/                 Khu vực quản trị (Controller + View riêng)
+│   ├── Views/                       Giao diện Razor phía người dùng
+│   └── wwwroot/                     CSS, JavaScript, hình ảnh
+├── Database/
+│   ├── 01_TaoBang.sql               Script tạo toàn bộ bảng
+│   └── 02_DuLieuMau.sql             Script nạp dữ liệu mẫu
+└── README.md
+```
 
-Mở tệp Database.sql nằm trong thư mục App_Data/ (hoặc thư mục gốc).
+---
 
-Thực thi lệnh Execute (F5) để tạo Database CompanyDB cùng toàn bộ các bảng và dữ liệu mẫu.
+## 5. Chức năng đã cài đặt
 
-Cấu hình Chuỗi Kết Nối (Connection String):
+### Phía người dùng (Client)
 
-Mở file Web.config trong dự án và chỉnh sửa lại chuỗi kết nối phù hợp với SQL Server trên máy bạn:
-<connectionStrings>
-  <add name="CompanyDbContext" 
-       connectionString="Data Source=YOUR_SERVER_NAME;Initial Catalog=CompanyDB;Integrated Security=True;TrustServerCertificate=True" 
-       providerName="System.Data.SqlClient" />
-</connectionStrings>
+| Nghiệp vụ theo đề bài | Đường dẫn | Ghi chú |
+|---|---|---|
+| Giới thiệu lĩnh vực hoạt động | `/BusinessField`, `/linh-vuc/{slug}` | 4 lĩnh vực, có trang chi tiết riêng |
+| Giới thiệu hàng hoá, dịch vụ (nhiều chủng loại) | `/Product`, `/san-pham/{slug}` | Cây danh mục 2 cấp, lọc theo danh mục / giá / thương hiệu, sắp xếp, phân trang, tìm kiếm có gợi ý |
+| Tiếp nhận đơn hàng, bán hàng trực tuyến | `/Cart`, `/Order/Checkout`, `/Order/Track` | Giỏ hàng AJAX, đặt hàng có/không cần tài khoản, tra cứu đơn |
+| Đăng tải tin tức | `/News`, `/tin-tuc/{slug}` | 4 chuyên mục, tìm kiếm, phân trang |
+| Khác | `/Home/GioiThieu`, `/Home/LienHe`, `/Account/*` | Giới thiệu công ty, gửi liên hệ, đăng ký / đăng nhập / hồ sơ |
 
-Biên dịch và Chạy Dự án:
+### Phía quản trị (Server — `/Admin`)
 
-Mở file solution (WebCompany.sln) bằng Visual Studio.
+- **Tổng quan**: 7 chỉ số, biểu đồ doanh thu 6 tháng, đơn hàng gần đây, sản phẩm sắp hết hàng.
+- **Đơn hàng**: lọc theo trạng thái / khoảng ngày / từ khoá, xem chi tiết, chuyển trạng thái theo quy trình, in phiếu giao hàng.
+- **Sản phẩm**: thêm / sửa / xoá, tải ảnh, bật-tắt kinh doanh bằng AJAX.
+- **Danh mục**: quản lý cây danh mục 2 cấp.
+- **Tin tức**: soạn bài, quản lý chuyên mục.
+- **Lĩnh vực hoạt động**: quản lý nội dung giới thiệu.
+- **Liên hệ**: xem và đánh dấu đã xử lý.
+- **Tài khoản & phân quyền** *(chỉ Quản trị viên)*: gán vai trò, khoá tài khoản, đặt lại mật khẩu.
 
-Nhấn Ctrl + Shift + B để Rebuild Solution và restore các gói NuGet.
+---
 
-Nhấn F5 hoặc nút IIS Express để khởi chạy website trên trình duyệt.
+## 6. Các biện pháp bảo mật đã triển khai
+
+| Kiểu tấn công | Biện pháp | Vị trí trong mã nguồn |
+|---|---|---|
+| SQL Injection | Toàn bộ truy vấn qua LINQ / EF Core → câu lệnh tham số hoá, không ghép chuỗi SQL | Tất cả Controller |
+| XSS (lưu trữ) | Lọc HTML theo danh sách trắng bằng `HtmlSanitizer` trước khi lưu | `Services/HtmlSanitizerService.cs` |
+| XSS (phản chiếu) | Razor tự mã hoá HTML; JavaScript dùng `textContent` thay cho `innerHTML` | Views, `wwwroot/js/site.js` |
+| CSRF | Bắt buộc anti-forgery token cho **mọi** request POST (đăng ký filter toàn cục) | `Program.cs` |
+| Lộ mật khẩu | ASP.NET Core Identity băm mật khẩu bằng PBKDF2 (HMAC-SHA256) | `Program.cs`, `AccountController` |
+| Dò mật khẩu (brute force) | Khoá tài khoản 15 phút sau 5 lần sai + giới hạn 10 request/phút theo IP | `Program.cs` |
+| Dò tài khoản | Thông báo đăng nhập sai chung chung, không tiết lộ email có tồn tại hay không | `AccountController.Login` |
+| Leo thang đặc quyền | Phân quyền theo vai trò ở lớp cơ sở `AdminBaseController`; tài khoản tự đăng ký luôn chỉ là `Customer` | `Areas/Admin`, `AccountController.Register` |
+| IDOR | Truy vấn đơn hàng luôn kèm điều kiện `UserId == người đang đăng nhập` | `OrderController.Details` |
+| Tải tệp độc hại | Kiểm tra 5 lớp: phần mở rộng, MIME, dung lượng, chữ ký nhị phân, đổi tên bằng GUID | `Services/FileUploadService.cs` |
+| Giả mạo giá bán | Giá luôn đọc lại từ CSDL khi thêm giỏ và khi đặt hàng, không tin dữ liệu từ trình duyệt | `CartController`, `OrderController` |
+| Mass assignment | Chỉ gán từng trường được phép khi sửa, không dùng `TryUpdateModel` trên toàn thực thể | `Areas/Admin/Controllers/ProductsController` |
+| Open Redirect | `returnUrl` chỉ được chấp nhận nếu là đường dẫn nội bộ (`Url.IsLocalUrl`) | `AccountController.RedirectToLocal` |
+| Clickjacking, MIME sniffing | Các HTTP security header: CSP, X-Frame-Options, X-Content-Type-Options… | `Middleware/SecurityHeadersMiddleware.cs` |
+| Đánh cắp cookie | Cookie đặt `HttpOnly`, `SameSite`, `Secure` | `Program.cs` |
+| Lộ thông tin hệ thống | Trang lỗi thân thiện ở môi trường Production, không hiển thị stack trace | `Program.cs`, `Views/Shared/Error.cshtml` |
+
+---
+
+## 7. Lệnh hữu ích
+
+```bash
+# Biên dịch kiểm tra lỗi
+dotnet build
+
+# Chạy ở chế độ tự nạp lại khi sửa mã
+dotnet watch run
+
+# Tạo migration mới sau khi sửa Entity
+dotnet ef migrations add TenThayDoi --output-dir Data/Migrations
+dotnet ef database update
+
+# Xoá CSDL để nạp lại từ đầu
+dotnet ef database drop --force
+```
